@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Career Path — The Future of IT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+    :root{
+      --ink:#0A0E1A;
+      --panel:#121729;
+      --panel-2:#1A2138;
+      --text:#EDEFF7;
+      --muted:#8891A8;
+      --amber:#FFB84D;
+      --cyan:#5EEAD4;
+      --line: rgba(237,239,247,0.08);
+      --line-strong: rgba(94, 111, 175, 0.16);
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{
+      background:var(--ink);
+      color:var(--text);
+      font-family:'Inter',sans-serif;
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+    }
+    ::selection{background:var(--amber);color:var(--ink);}
+
+    h1,h2,h3{font-family:'Space Grotesk',sans-serif;font-weight:600;letter-spacing:-0.02em;}
+    .mono{font-family:'JetBrains Mono',monospace;}
+
+    a{color:inherit;text-decoration:none;}
+    button{font-family:inherit;cursor:pointer;}
+
+    @media (prefers-reduced-motion: reduce){
+      *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+    }
+
+    /* ---------- Preloader ---------- */
+    #preloader{
+      position:fixed; inset:0; z-index:1000;
+      background:var(--ink);
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:28px;
+      transition:opacity .7s ease, visibility .7s ease;
+    }
+    #preloader.hidden{opacity:0; visibility:hidden; pointer-events:none;}
+    .pre-mark{width:88px;height:88px;}
+    .pre-mark path{
+      fill:none; stroke:var(--amber); stroke-width:3.2;
+      stroke-linecap:round; stroke-linejoin:round;
+      stroke-dasharray:340; stroke-dashoffset:340;
+      animation:drawMark 1.5s cubic-bezier(.65,0,.35,1) forwards;
+    }
+    .pre-mark circle{
+      fill:var(--cyan); opacity:0;
+      animation:popDot .4s ease forwards;
+    }
+    .pre-mark #dot1{animation-delay:.55s;}
+    .pre-mark #dot2{animation-delay:1.0s;}
+    .pre-mark #dot3{animation-delay:1.45s;}
+    @keyframes drawMark{to{stroke-dashoffset:0;}}
+    @keyframes popDot{
+      0%{opacity:0; transform:scale(0);}
+      60%{opacity:1; transform:scale(1.4);}
+      100%{opacity:1; transform:scale(1);}
+      }
+    .pre-label{
+      font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.18em;
+      color:var(--muted); text-transform:uppercase;
+      display:flex; gap:10px; align-items:center;
+    }
+    .pre-track{width:160px; height:1px; background:var(--line-strong); position:relative; overflow:hidden;}
+    .pre-fill{position:absolute; left:0; top:0; height:100%; width:0%; background:var(--amber); animation:fillTrack 1.8s ease forwards;}
+    @keyframes fillTrack{to{width:100%;}}
+
+    /* ---------- Nav ---------- */
+    header{
+      position:fixed; top:0; left:0; right:0; z-index:100;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:22px clamp(20px,5vw,64px);
+      background:linear-gradient(to bottom, rgba(10,14,26,.92), rgba(10,14,26,0));
+      backdrop-filter:blur(6px);
+      opacity:0; transform:translateY(-16px);
+      animation:navIn .8s ease forwards; animation-delay:1.7s;
+    }
+    @keyframes navIn{to{opacity:1; transform:translateY(0);}}
+    .logo{display:flex; align-items:center; gap:10px; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:18px; letter-spacing:-.01em;}
+    .logo svg{width:22px;height:22px;}
+    .logo span{color:var(--amber);}
+    nav ul{list-style:none; display:flex; gap:38px;}
+    nav a{
+      font-size:14px; color:var(--muted); font-weight:500; position:relative; padding-bottom:4px;
+      transition:color .25s ease;
+    }
+    nav a::after{
+      content:''; position:absolute; left:0; bottom:0; width:0; height:1px; background:var(--amber);
+      transition:width .25s ease;
+    }
+    nav a:hover{color:var(--text);}
+    nav a:hover::after{width:100%;}
+    .nav-links{display:flex; align-items:center; gap:38px;}
+    .nav-cta{
+      padding:9px 18px; border:1px solid var(--line-strong); border-radius:100px;
+      font-size:13px; font-weight:500; color:var(--text);
+      transition:border-color .25s ease, background .25s ease;
+    }
+    .nav-cta:hover{border-color:var(--amber); background:rgba(255,184,77,.08);}
+    .nav-toggle{display:none; flex-direction:column; gap:5px; background:none; border:none;}
+    .nav-toggle span{width:22px; height:2px; background:var(--text);}
+
+    /* ---------- Hero ---------- */
+    .hero{
+      min-height:100vh; position:relative; display:flex; flex-direction:column; justify-content:center;
+      padding:160px clamp(20px,5vw,64px) 80px;
+      background:
+        radial-gradient(ellipse 900px 500px at 15% 0%, rgba(255,184,77,.08), transparent 60%),
+        radial-gradient(ellipse 900px 600px at 90% 20%, rgba(94,234,212,.07), transparent 60%);
+    }
+    .eyebrow{
+      font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.2em; text-transform:uppercase;
+      color:var(--cyan); margin-bottom:22px; display:flex; align-items:center; gap:10px;
+      opacity:0; animation:fadeUp .8s ease forwards; animation-delay:1.9s;
+    }
+    .eyebrow::before{content:''; width:26px; height:1px; background:var(--cyan);}
+    .hero h1{
+      font-size:clamp(38px,6.4vw,76px); line-height:1.04; max-width:16.5ch;
+      opacity:0; animation:fadeUp .9s ease forwards; animation-delay:2.05s;
+    }
+    .hero h1 em{font-style:normal; color:var(--amber);}
+    .hero p.sub{
+      margin-top:26px; max-width:620px; font-size:clamp(16px,1.7vw,19px); color:var(--muted); line-height:1.6;
+      opacity:0; animation:fadeUp .9s ease forwards; animation-delay:2.2s;
+    }
+    .hero-ctas{
+      margin-top:38px; display:flex; gap:16px; flex-wrap:wrap;
+      opacity:0; animation:fadeUp .9s ease forwards; animation-delay:2.35s;
+    }
+    .btn-primary{
+      padding:14px 26px; background:var(--amber); color:var(--ink); border:none; border-radius:8px;
+      font-weight:600; font-size:14.5px; transition:transform .25s ease, box-shadow .25s ease;
+    }
+    .btn-primary:hover{transform:translateY(-2px); box-shadow:0 10px 26px rgba(255,184,77,.25);}
+    .btn-ghost{
+      padding:14px 26px; background:transparent; color:var(--text); border:1px solid var(--line-strong); border-radius:8px;
+      font-weight:500; font-size:14.5px; transition:border-color .25s ease, background .25s ease;
+    }
+    .btn-ghost:hover{border-color:var(--text); background:rgba(255,255,255,.04);}
+    @keyframes fadeUp{from{opacity:0; transform:translateY(18px);} to{opacity:1; transform:translateY(0);}}
+
+    /* hero path */
+    .path-wrap{
+      margin-top:72px; width:100%; max-width:1100px;
+      opacity:0; animation:fadeUp 1s ease forwards; animation-delay:2.5s;
+    }
+    .path-wrap svg{width:100%; height:auto; display:block;}
+    .path-line{
+      fill:none; stroke:var(--line-strong); stroke-width:2;
+    }
+    .path-line-anim{
+      fill:none; stroke:url(#pathGrad); stroke-width:2; stroke-linecap:round;
+      stroke-dasharray:1400; stroke-dashoffset:1400;
+      animation:drawPath 2.6s cubic-bezier(.6,0,.3,1) forwards; animation-delay:2.7s;
+    }
+    @keyframes drawPath{to{stroke-dashoffset:0;}}
+    .path-node{opacity:0; transform-origin:center;}
+    .path-node circle.core{fill:var(--panel); stroke:var(--line-strong); stroke-width:1.5;}
+    .path-node.lit circle.core{stroke:var(--amber);}
+    .path-node text{
+      font-family:'JetBrains Mono',monospace; font-size:11px; fill:var(--muted); letter-spacing:.05em;
+    }
+    .path-node.final circle.core{stroke:var(--cyan); fill:rgba(94,234,212,.08);}
+    .path-node.final text{fill:var(--cyan);}
+    .n1{animation:popNode .5s ease forwards; animation-delay:2.9s;}
+    .n2{animation:popNode .5s ease forwards; animation-delay:3.35s;}
+    .n3{animation:popNode .5s ease forwards; animation-delay:3.8s;}
+    .n4{animation:popNode .5s ease forwards; animation-delay:4.25s;}
+    .n5{animation:popNode .5s ease forwards; animation-delay:4.7s;}
+    @keyframes popNode{from{opacity:0; transform:scale(.4);} to{opacity:1; transform:scale(1);}}
+    .final .pulse{
+      fill:none; stroke:var(--cyan); stroke-width:1.5; opacity:0;
+      animation:pulseRing 2s ease-out infinite; animation-delay:5.1s;
+    }
+    @keyframes pulseRing{
+      0%{opacity:.7; transform:scale(1);}
+      100%{opacity:0; transform:scale(2.6);}
+    }
+
+    /* ---------- Section shell ---------- */
+    section{padding:140px clamp(20px,5vw,64px);}
+    .section-head{max-width:680px; margin-bottom:64px;}
+    .section-eyebrow{
+      font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.18em; text-transform:uppercase;
+      color:var(--amber); margin-bottom:14px;
+    }
+    .section-head h2{font-size:clamp(28px,3.6vw,44px); line-height:1.15;}
+    .section-head p{margin-top:18px; color:var(--muted); font-size:16px; line-height:1.7; max-width:56ch;}
+
+    .reveal{opacity:0; transform:translateY(28px); transition:opacity .8s ease, transform .8s ease;}
+    .reveal.in{opacity:1; transform:translateY(0);}
+    .reveal-stagger > *{opacity:0; transform:translateY(24px); transition:opacity .7s ease, transform .7s ease;}
+    .reveal-stagger.in > *{opacity:1; transform:translateY(0);}
+    .reveal-stagger.in > *:nth-child(1){transition-delay:.05s;}
+    .reveal-stagger.in > *:nth-child(2){transition-delay:.15s;}
+    .reveal-stagger.in > *:nth-child(3){transition-delay:.25s;}
+    .reveal-stagger.in > *:nth-child(4){transition-delay:.35s;}
+    .reveal-stagger.in > *:nth-child(5){transition-delay:.45s;}
+    .reveal-stagger.in > *:nth-child(6){transition-delay:.55s;}
+
+    /* ---------- About / pillars ---------- */
+    .about{background:var(--panel); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+    .pillars{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:14px; overflow:hidden;}
+    .pillar{background:var(--ink); padding:34px 30px;}
+    .pillar .pnum{font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--cyan); margin-bottom:16px;}
+    .pillar h3{font-size:19px; margin-bottom:10px;}
+    .pillar p{color:var(--muted); font-size:14.5px; line-height:1.65;}
+
+    /* ---------- AI Engine ---------- */
+    .engine{display:grid; grid-template-columns:1fr 1fr; gap:72px; align-items:center;}
+    .engine-copy p{color:var(--muted); font-size:16px; line-height:1.75; margin-bottom:18px;}
+    .engine-copy strong{color:var(--text); font-weight:600;}
+    .engine-tags{display:flex; gap:10px; flex-wrap:wrap; margin-top:26px;}
+    .tag{
+      font-family:'JetBrains Mono',monospace; font-size:12px; padding:7px 12px; border:1px solid var(--line-strong);
+      border-radius:100px; color:var(--muted);
+    }
+    .terminal{
+      background:var(--panel-2); border:1px solid var(--line-strong); border-radius:12px; overflow:hidden;
+      box-shadow:0 30px 60px -20px rgba(0,0,0,.5);
+    }
+    .term-bar{display:flex; align-items:center; gap:8px; padding:14px 16px; border-bottom:1px solid var(--line);}
+    .term-dot{width:10px; height:10px; border-radius:50%;}
+    .term-dot:nth-child(1){background:#ff5f57;}
+    .term-dot:nth-child(2){background:#febc2e;}
+    .term-dot:nth-child(3){background:#28c840;}
+    .term-title{margin-left:8px; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted);}
+    .term-body{padding:22px 20px; font-family:'JetBrains Mono',monospace; font-size:13.5px; line-height:1.9; min-height:230px;}
+    .term-line{color:var(--muted); white-space:pre-wrap;}
+    .term-line .prompt{color:var(--cyan);}
+    .term-line .ok{color:var(--amber);}
+    .term-cursor{display:inline-block; width:7px; height:14px; background:var(--cyan); vertical-align:middle; animation:blink 1s step-start infinite;}
+    @keyframes blink{50%{opacity:0;}}
+
+    /* ---------- Services ---------- */
+    .services-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+    .service-card{
+      background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:32px 28px;
+      transition:border-color .3s ease, transform .3s ease, background .3s ease;
+    }
+    .service-card:hover{border-color:var(--line-strong); transform:translateY(-4px); background:var(--panel-2);}
+    .service-card svg{width:26px; height:26px; margin-bottom:20px; stroke:var(--amber);}
+    .service-card h3{font-size:17px; margin-bottom:10px;}
+    .service-card p{font-size:14px; color:var(--muted); line-height:1.65;}
+
+    /* ---------- Process ---------- */
+    .process{background:var(--panel); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+    .process-list{display:flex; flex-direction:column;}
+    .process-item{
+      display:grid; grid-template-columns:80px 1fr; gap:28px; padding:30px 0; border-top:1px solid var(--line);
+      align-items:baseline;
+    }
+    .process-item:last-child{border-bottom:1px solid var(--line);}
+    .process-num{font-family:'JetBrains Mono',monospace; color:var(--amber); font-size:14px;}
+    .process-item h3{font-size:19px; margin-bottom:6px;}
+    .process-item p{color:var(--muted); font-size:14.5px; max-width:60ch; line-height:1.65;}
+
+    /* ---------- Stats ---------- */
+    .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:14px; overflow:hidden;}
+    .stat{background:var(--ink); padding:38px 26px; text-align:left;}
+    .stat .num{font-family:'Space Grotesk',sans-serif; font-size:clamp(30px,3.4vw,42px); font-weight:700; color:var(--cyan);}
+    .stat .label{margin-top:8px; font-size:13px; color:var(--muted); letter-spacing:.02em;}
+
+    /* ---------- CTA ---------- */
+    .cta{
+      text-align:center; padding-top:120px; padding-bottom:140px;
+      background:radial-gradient(ellipse 700px 400px at 50% 0%, rgba(255,184,77,.09), transparent 65%);
+    }
+    .cta h2{font-size:clamp(30px,4.6vw,54px); max-width:16ch; margin:0 auto 26px;}
+    .cta p{color:var(--muted); font-size:16px; margin-bottom:36px;}
+    .cta .hero-ctas{justify-content:center; opacity:1; animation:none;
+    }
+
+    /* ---------- Footer ---------- */
+    footer{
+      border-top:1px solid var(--line); padding:48px clamp(20px,5vw,64px);
+      display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:20px;
+    }
+    footer .logo{font-size:16px;}
+    footer nav ul{gap:28px;}
+    footer .fine{color:var(--muted); font-size:13px;
+    }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width:900px){
+      .pillars{grid-template-columns:1fr;}
+      .engine{grid-template-columns:1fr; gap:44px;}
+      .services-grid{grid-template-columns:repeat(2,1fr);}
+      .stats{grid-template-columns:repeat(2,1fr);}
+    }
+    @media (max-width:640px){
+      .nav-links{
+        position:fixed; top:0; right:0; height:100vh; width:78vw; max-width:320px;
+        background:var(--panel); flex-direction:column; align-items:flex-start; justify-content:flex-start;
+        padding:100px 30px; gap:30px; transform:translateX(100%); transition:transform .35s ease;
+        border-left:1px solid var(--line);
+    }
+      .nav-links.open{transform:translateX(0);}
+      nav ul{flex-direction:column; gap:22px;}
+      .nav-toggle{display:flex;}
+      .services-grid{grid-template-columns:1fr;}
+      .stats{grid-template-columns:1fr;}
+      .process-item{grid-template-columns:50px 1fr;}
+    }
+</style>
+</head>
+<body>
+
+<!-- Preloader -->
+<div id="preloader">
+  <svg class="pre-mark" viewBox="0 0 100 100" fill="none">
+    <path d="M10 78 C 30 78, 32 40, 50 40 C 68 40, 70 22, 90 22"/>
+    <circle id="dot1" cx="10" cy="78" r="4"/>
+    <circle id="dot2" cx="50" cy="40" r="4"/>
+    <circle id="dot3" cx="90" cy="22" r="4"/>
+  </svg>
+  <div class="pre-label">
+    <span class="mono">LOADING PATH</span>
+  </div>
+  <div class="pre-track"><div class="pre-fill"></div></div>
+</div>
+
+<!-- Header -->
+<header>
+  <a href="#top" class="logo">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M2 18 C 8 18, 8 8, 14 8 C 18 8, 18 4, 22 4" stroke="#FFB84D" stroke-width="2.4" stroke-linecap="round"/></svg>
+    Career <span>Path</span>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <nav>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#engine">AI Engine</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#process">Process</a></li>
+      </ul>
+    </nav>
+    <a href="#contact" class="nav-cta">Start your path</a>
+  </div>
+  <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+</header>
+
+<!-- Hero -->
+<section class="hero" id="top">
+  <div class="eyebrow mono">Career Path — IT Solutions</div>
+  <h1>The future of IT has a path.<br>We <em>drew it</em> — then built the AI to walk it.</h1>
+  <p class="sub">Career Path is an IT company engineered for what comes next. We didn't wait for the future of the industry to arrive — we designed and developed the AI that's already shaping it.</p>
+  <div class="hero-ctas">
+    <a href="#engine" class="btn-primary">See the AI Engine</a>
+    <a href="#contact" class="btn-ghost">Talk to our team</a>
+  </div>
+
+  <div class="path-wrap">
+    <svg viewBox="0 0 1100 200" fill="none">
+      <defs>
+        <linearGradient id="pathGrad" x1="0" y1="0" x2="1100" y2="0" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#FFB84D"/>
+          <stop offset="1" stop-color="#5EEAD4"/>
+        </linearGradient>
+      </defs>
+      <path class="path-line" d="M40 150 C 180 150, 200 60, 320 60 C 420 60, 440 140, 560 140 C 680 140, 700 40, 820 40 C 900 40, 940 100, 1060 100"/>
+      <path class="path-line-anim" d="M40 150 C 180 150, 200 60, 320 60 C 420 60, 440 140, 560 140 C 680 140, 700 40, 820 40 C 900 40, 940 100, 1060 100"/>
+
+      <g class="path-node lit n1"><circle class="core" cx="40" cy="150" r="9"/><text x="40" y="180" text-anchor="middle">IDEA</text></g>
+      <g class="path-node lit n2"><circle class="core" cx="320" cy="60" r="9"/><text x="320" y="34" text-anchor="middle">BUILD</text></g>
+      <g class="path-node lit n3"><circle class="core" cx="560" cy="140" r="9"/><text x="560" y="170" text-anchor="middle">ENGINEER</text></g>
+      <g class="path-node lit n4"><circle class="core" cx="820" cy="40" r="9"/><text x="820" y="24" text-anchor="middle">LAUNCH</text></g>
+      <g class="path-node final n5">
+        <circle class="pulse" cx="1060" cy="100" r="9"/>
+        <circle class="core" cx="1060" cy="100" r="10"/>
+        <text x="1060" y="130" text-anchor="middle">FUTURE</text>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<!-- About -->
+<section class="about" id="about">
+  <div class="section-head reveal">
+    <div class="section-eyebrow">Our Position</div>
+    <h2>IT stopped being about maintenance. It's about momentum.</h2>
+    <p>We started Career Path because most IT companies were still managing the present. We wanted to build for what comes after — systems that predict, adapt, and improve on their own. That mindset is why we built our own AI instead of licensing someone else's.</p>
+  </div>
+  <div class="pillars reveal-stagger">
+    <div class="pillar">
+      <div class="pnum">01 / Foresight</div>
+      <h3>We build ahead of the request</h3>
+      <p>Every system we ship is designed for the problem a client will have next year, not just the one they have today.</p>
+    </div>
+    <div class="pillar">
+      <div class="pnum">02 / Engineering</div>
+      <h3>Craft, not shortcuts</h3>
+      <p>Clean infrastructure, tested code, and documentation that a team can actually stand on for the next decade.</p>
+    </div>
+    <div class="pillar">
+      <div class="pnum">03 / Intelligence</div>
+      <h3>Our own AI, built in-house</h3>
+      <p>We didn't outsource the hardest part. Our engineering team designed, trained, and shipped Atlas ourselves.</p>
+    </div>
+  </div>
+</section>
+
+<!-- AI Engine -->
+<section class="engine-section" id="engine">
+  <div class="engine">
+    <div class="engine-copy reveal">
+      <div class="section-eyebrow">Built In-House</div>
+      <h2 style="font-size:clamp(26px,3.2vw,38px); margin-bottom:22px;">Atlas: the AI engine we developed ourselves</h2>
+      <p>Most IT companies bolt on someone else's AI and call it innovation. We took the harder road: our own team <strong>designed, trained, and developed Atlas</strong> — the AI system now running quietly underneath our clients' infrastructure.</p>
+      <p>Atlas watches system signals around the clock, flags risk before it becomes downtime, and automates the repetitive work that used to eat entire engineering days. It's not a plug-in. It's the product of years spent believing IT could be built differently.</p>
+      <div class="engine-tags">
+        <span class="tag">Predictive monitoring</span>
+        <span class="tag">Auto-remediation</span>
+        <span class="tag">Built by our engineers</span>
+      </div>
+    </div>
+    <div class="terminal reveal">
+      <div class="term-bar">
+        <div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div>
+        <div class="term-title">atlas — career path ai</div>
+      </div>
+      <div class="term-body" id="termBody"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Services -->
+<section id="services">
+  <div class="section-head reveal">
+    <div class="section-eyebrow">What We Do</div>
+    <h2>Full-stack IT, sharpened by AI</h2>
+    <p>From infrastructure to intelligence — everything we build is meant to outlast the trend cycle.</p>
+  </div>
+  <div class="services-grid reveal-stagger">
+    <div class="service-card">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M4 17h16M4 12h10M4 7h16" stroke-linecap="round"/></svg>
+      <h3>Cloud Infrastructure</h3>
+      <p>Scalable, secure environments designed to grow with you instead of against you.</p>
+    </div>
+    <div class="service-card">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M8 4 L2 12 8 20 M16 4 L22 12 16 20" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <h3>Software Engineering</h3>
+      <p>Custom platforms and products, engineered with the same discipline we hold ourselves to.</p>
+    </div>
+    <div class="service-card">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8" stroke-linecap="round"/></svg>
+      <h3>AI &amp; Automation</h3>
+      <p>Atlas and custom automations that remove the repetitive work from your operations.</p>
+    </div>
+    <div class="service-card">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z" stroke-linejoin="round"/></svg>
+      <h3>Cybersecurity</h3>
+      <p>Threat monitoring and hardened systems, watched by Atlas around the clock.</p>
+    </div>
+    <div class="service-card">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M3 12h18M12 3v18" stroke-linecap="round"/></svg>
+      <h3>IT Consulting</h3>
+      <p>Straight answers on where your systems stand and what's worth building next.</p>
+    </div>
+    <div class="service-card">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3" stroke-linecap="round"/></svg>
+      <h3>Managed Support</h3>
+      <p>A team on call, backed by an AI that usually catches the problem before we do.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Process -->
+<section class="process" id="process">
+  <div class="section-head reveal">
+    <div class="section-eyebrow">How We Work</div>
+    <h2>A path, in order</h2>
+    <p>The same five steps, every project — because the sequence is what makes it reliable.</p>
+  </div>
+  <div class="process-list reveal-stagger">
+    <div class="process-item">
+      <div class="process-num">01</div>
+      <div><h3>Discover</h3><p>We map your systems, your risks, and the problem you actually need solved.</p></div>
+    </div>
+    <div class="process-item">
+      <div class="process-num">02</div>
+      <div><h3>Design</h3><p>Architecture and interfaces get planned before a line of code is written.</p></div>
+    </div>
+    <div class="process-item">
+      <div class="process-num">03</div>
+      <div><h3>Build</h3><p>Our engineers ship in tight cycles, with Atlas monitoring quality as we go.</p></div>
+    </div>
+    <div class="process-item">
+      <div class="process-num">04</div>
+      <div><h3>Deploy</h3><p>Rollouts are staged, tested, and reversible — no surprise downtime.</p></div>
+    </div>
+    <div class="process-item">
+      <div class="process-num">05</div>
+      <div><h3>Evolve</h3><p>Atlas keeps learning from your systems long after launch day.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<section id="stats">
+  <div class="section-head reveal">
+    <div class="section-eyebrow">In Numbers</div>
+    <h2>What Atlas has learned so far</h2>
+  </div>
+  <div class="stats reveal-stagger">
+    <div class="stat"><div class="num" data-count="120">0</div><div class="label">Systems modernized</div></div>
+    <div class="stat"><div class="num" data-count="40" data-suffix="M+">0</div><div class="label">Signals processed daily</div></div>
+    <div class="stat"><div class="num" data-count="99.98" data-suffix="%" data-decimal="true">0</div><div class="label">Uptime delivered</div></div>
+    <div class="stat"><div class="num" data-count="24" data-suffix="/7">0</div><div class="label">Monitoring, always on</div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="contact">
+  <h2 class="reveal">Your path to the future starts with one conversation.</h2>
+  <p class="reveal">Tell us where your systems are today. We'll show you where Atlas can take them.</p>
+  <div class="hero-ctas reveal">
+    <a href="#" class="btn-primary">Start your path</a>
+    <a href="#" class="btn-ghost">View case studies</a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <a href="#top" class="logo">
+    <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M2 18 C 8 18, 8 8, 14 8 C 18 8, 18 4, 22 4" stroke="#FFB84D" stroke-width="2.4" stroke-linecap="round"/></svg>
+    Career Path
+  </a>
+  <nav><ul style="display:flex; list-style:none; gap:28px;">
+    <li><a href="#about">About</a></li>
+    <li><a href="#engine">AI Engine</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#process">Process</a></li>
+  </ul></nav>
+  <div class="fine">© 2026 Career Path. Built by our own engineers.</div>
+</footer>
+
+<script>
+  // Preloader
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('preloader').classList.add('hidden');
+    }, 1900);
+  });
+
+  // Mobile nav
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  // Scroll reveal
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => io.observe(el));
+
+  // Counter animation
+  const counters = document.querySelectorAll('[data-count]');
+  const counterIO = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = parseFloat(el.dataset.count);
+      const suffix = el.dataset.suffix || '';
+      const decimal = el.dataset.decimal === 'true';
+      const duration = 1400;
+      const start = performance.now();
+      function tick(now){
+        const p = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        const val = target * eased;
+        el.textContent = (decimal ? val.toFixed(2) : Math.round(val)) + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+      counterIO.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  counters.forEach(c => counterIO.observe(c));
+
+  // Terminal typing effect
+  const termLines = [
+    { text: '$ atlas init --client career-path', cls: 'prompt' },
+    { text: 'Analyzing 14,208 infrastructure signals...', cls: '' },
+    { text: 'Risk detected: node-7 disk saturation in 6h', cls: '' },
+    { text: 'Auto-remediation scheduled ✓', cls: 'ok' },
+    { text: 'Deploying patch across 3 regions...', cls: '' },
+    { text: 'Path optimized. Future secured.', cls: 'ok' },
+  ];
+  const termBody = document.getElementById('termBody');
+  let termStarted = false;
+
+  function typeTerminal(){
+    if (termStarted) return;
+    termStarted = true;
+    let lineIdx = 0;
+
+    function nextLine(){
+      if (lineIdx >= termLines.length){
+        const cur = document.createElement('span');
+        cur.className = 'term-cursor';
+        termBody.appendChild(cur);
+        return;
+      }
+      const line = termLines[lineIdx];
+      const div = document.createElement('div');
+      div.className = 'term-line ' + line.cls;
+      termBody.appendChild(div);
+      let charIdx = 0;
+      const speed = 18;
+      function typeChar(){
+        if (charIdx < line.text.length){
+          div.textContent += line.text[charIdx];
+          charIdx++;
+          setTimeout(typeChar, speed);
+        } else {
+          lineIdx++;
+          setTimeout(nextLine, 260);
+        }
+      }
+      typeChar();
+    }
+    nextLine();
+  }
+
+  const termIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { typeTerminal(); termIO.disconnect(); } });
+  }, { threshold: 0.4 });
+  termIO.observe(document.getElementById('engine'));
+</script>
+
+</body>
+</html>
